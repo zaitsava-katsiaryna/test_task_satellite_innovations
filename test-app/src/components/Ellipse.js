@@ -3,10 +3,8 @@ import Figure from "./Figure";
 class Ellipse extends Figure {
     constructor(id, background, borderRadius, x, y){
         super(id, background, borderRadius, x, y);
-        this.rx = 75
+        this.rx = 75;
         this.ry = 37.5;
-        // this.x += this.rx
-        // this.y += this.ry
     }
 
     draw(ctx, isSelected) {
@@ -24,9 +22,7 @@ class Ellipse extends Figure {
         }
     }
     isMouseWithinFigure(mouseX, mouseY){
-        let r = (mouseX - this.x - this.rx) ** 2 / this.rx ** 2 + (mouseY - this.y - this.ry) ** 2 / this.ry ** 2
-        console.log(r)
-        return r <= 1
+        return (mouseX - this.x - this.rx) ** 2 / this.rx ** 2 + (mouseY - this.y - this.ry) ** 2 / this.ry ** 2 <= 1
     }
 }
 

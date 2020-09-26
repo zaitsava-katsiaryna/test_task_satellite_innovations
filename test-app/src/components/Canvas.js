@@ -125,9 +125,17 @@ function Canvas() {
     };
 
     const onKeyPress = e => {
-        if (e.keyCode === 8 || e.keyCode === 46){
+        if (selectedFig){
 
+            if (e.keyCode === 8 || e.keyCode === 46){ /* if either backspace of delete is pressed */
+                /* delete selected figure */
+                let updatedFigures = canvasFigures.filter(fig => {return fig !== selectedFig});
+                setCanvasFigures(updatedFigures);
+                setSelectedFig(null);
+                setCurrentPos(null);
+            }
         }
+
     };
     return (
         <div
