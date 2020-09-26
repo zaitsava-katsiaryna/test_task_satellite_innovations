@@ -19,17 +19,10 @@ function Figures() {
                     e.dataTransfer.setData("id", fig.name);
                     e.dataTransfer.setData("borderRadius", fig.borderRadius);
                     e.dataTransfer.setData("background", fig.background);
-                    // if (fig.name === "rectangle"){
                     e.dataTransfer.setData("offsetX", e.nativeEvent.offsetX.toString());
                     e.dataTransfer.setData("offsetY", e.nativeEvent.offsetY.toString())
                 }}
-
-                    // }
-                    // else{
-                    //     e.dataTransfer.setData("offsetX", e.nativeEvent.offsetX.toString());
-                    //     e.dataTransfer.setData("offsetY", e.nativeEvent.offsetY.toString())}}
-                    // }
-                    >  </div>)
+            >  </div>)
 
 
     });

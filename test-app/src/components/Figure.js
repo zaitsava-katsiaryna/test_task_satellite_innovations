@@ -11,6 +11,9 @@ class Figure {
     draw(ctx, isSelected){
         console.log('Drawing...')
     }
+    isMouseWithinFigure(mouseX, mouseY){
+        return true;
+    }
 }
 
 export default Figure

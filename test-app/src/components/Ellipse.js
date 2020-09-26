@@ -2,16 +2,18 @@ import Figure from "./Figure";
 
 class Ellipse extends Figure {
     constructor(id, background, borderRadius, x, y){
-        /* x, y = center of the ellipse */
         super(id, background, borderRadius, x, y);
-        this.radius = 37.5;
+        this.rx = 75
+        this.ry = 37.5;
+        // this.x += this.rx
+        // this.y += this.ry
     }
 
     draw(ctx, isSelected) {
         ctx.save();
         ctx.scale(2, 1);
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, );
+        ctx.arc((this.x + this.rx) / 2, this.y + this.ry, this.ry, 0, 2 * Math.PI, );
         ctx.restore();
         ctx.fillStyle = this.background;
         ctx.fill();
@@ -20,6 +22,11 @@ class Ellipse extends Figure {
             ctx.strokeStyle = 'black';
             ctx.stroke();
         }
+    }
+    isMouseWithinFigure(mouseX, mouseY){
+        let r = (mouseX - this.x - this.rx) ** 2 / this.rx ** 2 + (mouseY - this.y - this.ry) ** 2 / this.ry ** 2
+        console.log(r)
+        return r <= 1
     }
 }
 

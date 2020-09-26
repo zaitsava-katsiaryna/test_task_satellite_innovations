@@ -51,7 +51,7 @@ function Canvas() {
             newCanvasFigure = new Rectangle(id, background, borderRadius, e.clientX-offsetX-canvasOffsetX, e.clientY-offsetY-canvasOffsetY);
         }
         else{
-            newCanvasFigure = new Ellipse(id, background, borderRadius, e.clientX-canvasOffsetX-offsetX, e.clientY-offsetY-offsetY) //TODO: edit x, y
+            newCanvasFigure = new Ellipse(id, background, borderRadius, e.clientX-canvasOffsetX-offsetX, e.clientY-canvasOffsetY-offsetY) //TODO: edit x, y
         }
         setCanvasFigures([...canvasFigures, newCanvasFigure])
     };
@@ -73,13 +73,11 @@ function Canvas() {
         }
     });
 
-
-
     const onMouseDown = e => {
         let [canvasOffsetX, canvasOffsetY] = [canvasRef.current.getBoundingClientRect().x, canvasRef.current.getBoundingClientRect().y];
         let [mouseX, mouseY] = [e.clientX-canvasOffsetX, e.clientY-canvasOffsetY];
         for (let fig of canvasFigures) {
-            if (mouseX >= fig.x && mouseY >= fig.y && mouseX <= fig.x + figureWidth && mouseY <= fig.y + figureHeight) {
+            if (fig.isMouseWithinFigure(mouseX, mouseY)) {
                 setSelectedFig(fig);
                 setCurrentPos({x: mouseX, y: mouseY});
                 break;

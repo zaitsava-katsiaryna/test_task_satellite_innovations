@@ -10,6 +10,9 @@ class Rectangle extends Figure {
             ctx.strokeRect(this.x, this.y, this.width, this.height);
         }
     }
+    isMouseWithinFigure(mouseX, mouseY){
+        return mouseX >= this.x && mouseY >= this.y && mouseX <= this.x + this.width && mouseY <= this.y + this.height
+    }
 }
 
 export default Rectangle
