@@ -10,7 +10,7 @@
 
 .figures {
   position: absolute;
-  width: 150px;
+  width: 300px;
   height: 100vh;
   left: 0;
   top: 0;
@@ -21,22 +21,26 @@
   position: absolute;
   width: 600px;
   height: 100vh;
-  left: 150px;
+  left: 300px;
   top: 0px;
   background-color: #9E9E9E;
 }
 
 .draggable {
-  width: 100px;
-  height: 100px;
-  background-color: yellow;
+  width: 150px;
+  height: 75px;
   margin: 5px auto;
-  line-height: 5em;
 }
 
 canvas{
   width: 600px;
   height: 600px;
   background-color: cadetblue;
+  display: inline-block;
+}
+
+.clearDiv {
+  position: absolute;
+  left: 1000px;
   display: inline-block;
 }

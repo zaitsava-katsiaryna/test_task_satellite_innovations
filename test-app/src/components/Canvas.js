@@ -1,20 +1,38 @@
 import React, {useRef, useEffect, useState} from "react";
 import '../App.css'
+// import {Figure, Rectangle, Ellipse}  from './Figure'
+import Ellipse from "./Ellipse"
+import Rectangle from "./Rectangle";
 
-function draw(ctx, figure, isSelected) {
-    ctx.fillStyle = 'lightblue';
-    ctx.fillRect(figure.x, figure.y, 100, 100);
-    if (isSelected){
-        ctx.lineWidth = figure.border;
-        ctx.strokeStyle = 'black';
-        ctx.strokeRect(figure.x, figure.y, 100, 100);
+
+function parseData(str){
+    if (str){
+        let arr = JSON.parse(str);
+        let figures = []
+        for (let item of arr){
+            let tmpFig = null;
+            if (item.id === "rectangle"){
+                tmpFig = new Rectangle(item.id, item.background, item.borderRadius, item.x, item.y);
+            }
+            else {
+                tmpFig = new Ellipse(item.id, item.background, item.borderRadius, item.x, item.y);
+            }
+            figures.push(tmpFig);
+        }
+        return figures;
     }
+    return null
+
 }
+
+
+const figureWidth = 150;
+const figureHeight = 75;
 
 function Canvas() {
     const canvasRef = useRef(null);
-    const [canvasRects, setCanvasRects] = useState([]);
-    const [selectedRect, setSelectedRect] = useState(null);
+    const [canvasFigures, setCanvasFigures] = useState(parseData(localStorage.getItem("canvasFigures")) || []);
+    const [selectedFig, setSelectedFig] = useState(null);
     const [currentPos, setCurrentPos] = useState(null);
 
     const onDragOver = e => {
@@ -24,31 +42,45 @@ function Canvas() {
     const onDrop = e => {
         let [canvasOffsetX, canvasOffsetY] = [canvasRef.current.getBoundingClientRect().x, canvasRef.current.getBoundingClientRect().y];
         const [offsetX, offsetY] = [e.dataTransfer.getData("offsetX"), e.dataTransfer.getData("offsetY")];
-        const newCanvasRect = { x: e.clientX-offsetX-canvasOffsetX, y: e.clientY-offsetY-canvasOffsetY};
-        setCanvasRects([...canvasRects, newCanvasRect])
+        const id = e.dataTransfer.getData("id");
+        const [background, borderRadius] = [e.dataTransfer.getData("background"), e.dataTransfer.getData("borderRadius")];
+
+        let newCanvasFigure = null;
+        /* Based on the figure type create corresponding object */
+        if (id === "rectangle"){
+            newCanvasFigure = new Rectangle(id, background, borderRadius, e.clientX-offsetX-canvasOffsetX, e.clientY-offsetY-canvasOffsetY);
+        }
+        else{
+            newCanvasFigure = new Ellipse(id, background, borderRadius, e.clientX-canvasOffsetX-offsetX, e.clientY-offsetY-offsetY) //TODO: edit x, y
+        }
+        setCanvasFigures([...canvasFigures, newCanvasFigure])
     };
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, 600, 600);
-        canvasRects.forEach(figure => {if (figure !== selectedRect) draw(ctx, figure, false)})
+        localStorage.setItem("canvasFigures", JSON.stringify(canvasFigures));
+        canvasFigures.forEach(figure => {if (figure !== selectedFig) figure.draw(ctx, false)})
+
     });
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
-        if (selectedRect){
-            draw(ctx, selectedRect, true)
+        if (selectedFig){
+            selectedFig.draw(ctx, true)
         }
     });
+
+
 
     const onMouseDown = e => {
         let [canvasOffsetX, canvasOffsetY] = [canvasRef.current.getBoundingClientRect().x, canvasRef.current.getBoundingClientRect().y];
         let [mouseX, mouseY] = [e.clientX-canvasOffsetX, e.clientY-canvasOffsetY];
-        for (let rect of canvasRects) {
-            if (mouseX >= rect.x && mouseY >= rect.y && mouseX <= rect.x + 100 && mouseY <= rect.y + 100) {
-                setSelectedRect(rect);
+        for (let fig of canvasFigures) {
+            if (mouseX >= fig.x && mouseY >= fig.y && mouseX <= fig.x + figureWidth && mouseY <= fig.y + figureHeight) {
+                setSelectedFig(fig);
                 setCurrentPos({x: mouseX, y: mouseY});
                 break;
             }
@@ -58,7 +90,7 @@ function Canvas() {
 
     const onMouseUp = e => {
 
-        setSelectedRect(null)
+        setSelectedFig(null)
         setCurrentPos(null)
     };
 
@@ -69,25 +101,42 @@ function Canvas() {
         if (currentPos){
             let dx = mouseX - currentPos.x;
             let dy = mouseY - currentPos.y;
-
-            let newFigCoords = {x: selectedRect.x + dx, y: selectedRect.y + dy};
-            let newFigures = canvasRects.map(fig => {
-                if (fig === selectedRect){
-                    return newFigCoords
+            let newFig = null;
+            if (selectedFig.id === "rectangle"){
+                newFig = new Rectangle(selectedFig.id, selectedFig.background, selectedFig.borderRadius,
+                    selectedFig.x + dx, selectedFig.y + dy)
+            }
+            else {
+                newFig = new Ellipse(selectedFig.id, selectedFig.background, selectedFig.borderRadius,
+                    selectedFig.x + dx, selectedFig.y + dy)
+            }
+            let newFigures = canvasFigures.map(fig => {
+                if (fig === selectedFig){
+                    return newFig
                 }
                 else {
+
                     return fig
                 }
             });
-            setCanvasRects(newFigures);
-            setSelectedRect(newFigCoords);
-            let newPos = {x: currentPos.x+dx, y: currentPos.y+dy}
+            setCanvasFigures(newFigures);
+            setSelectedFig(newFig);
+            let newPos = {x: currentPos.x+dx, y: currentPos.y+dy};
             setCurrentPos(newPos)
         }
     };
 
+    const onKeyPress = e => {
+        if (e.keyCode === 8 || e.keyCode === 46){
+
+        }
+    };
     return (
-        <div className="canvas">
+        <div
+            className="canvas"
+            onKeyDown={onKeyPress}
+            tabIndex="0"
+        >
             <canvas
                 ref={canvasRef}
                 onDragOver={onDragOver}
@@ -95,8 +144,15 @@ function Canvas() {
                 onMouseDown={(e, canvasRef) => onMouseDown(e, canvasRef)}
                 onMouseUp = {onMouseUp}
                 onMouseMove = {onMouseMove}
+
                 width={600}
                 height={600}/>
+            <div className="clearDiv">
+                <button onClick={() => {
+                    localStorage.clear();
+                    setCanvasFigures([])
+                }}>Clear</button>
+            </div>
         </div>
     )
 }
