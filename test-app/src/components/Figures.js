@@ -14,7 +14,7 @@ function Figures() {
                 draggable
                 key={fig.name}
                 className="draggable"
-                style={{background: fig.background, borderRadius: fig.borderRadius}}
+                style={{background: fig.background, borderRadius: fig.borderRadius, marginTop: "50px"}}
                 onDragStart={e => {
                     e.dataTransfer.setData("id", fig.name);
                     e.dataTransfer.setData("borderRadius", fig.borderRadius);
@@ -27,7 +27,11 @@ function Figures() {
 
     return (
         <div className="figures">
-            {figures}
+            <div className="headerText">Figures</div>
+            <div style={{marginTop: "80px"}}>
+                {figures}
+            </div>
+
         </div>
     )
 }

@@ -29,6 +29,7 @@ function parseData(str){
 }
 
 function deleteSelectedFigure(canvasFigures, selectedFig, setCanvasFigures, setSelectedFig, setCurrentPos){
+    console.log('deleting')
     let updatedFigures = canvasFigures.filter(fig => {return fig !== selectedFig});
     setCanvasFigures(updatedFigures);
     setSelectedFig(null);
@@ -79,10 +80,8 @@ function Canvas() {
         }
     });
 
-
-
     const onMouseDown = e => {
-
+        e.preventDefault();
         let [canvasOffsetX, canvasOffsetY] = [canvasRef.current.getBoundingClientRect().x, canvasRef.current.getBoundingClientRect().y];
         let [mouseX, mouseY] = [e.clientX-canvasOffsetX, e.clientY-canvasOffsetY];
         for (let fig of canvasFigures) {
@@ -91,11 +90,9 @@ function Canvas() {
                 setCurrentPos({x: mouseX, y: mouseY});
             }
         }
-        // e.stopPropagation();
     };
 
     const onMouseUp = e => {
-        console.log('a');
         setSelectedFig(null); // no figure is selected
         setCurrentPos(null);
 
@@ -133,7 +130,9 @@ function Canvas() {
 
 
     const onKeyPress = e => {
+        console.log('haha')
         if (selectedFig){
+            console.log('hey')
             if (e.keyCode === BACKSPACE || e.keyCode === DELETE){ /* if either backspace of delete is pressed */
                 /* delete selected figure */
                deleteSelectedFigure(canvasFigures, selectedFig, setCanvasFigures, setSelectedFig, setCurrentPos);
@@ -142,11 +141,7 @@ function Canvas() {
     };
 
     const onMouseEnter = e => {
-
         setIsCursorOverCanvas(true);
-        // let newObj = {display: "none", left: 0, top: 0};
-        // setDisplay(newObj)
-
     };
 
     const onMouseOut = e => {
@@ -154,26 +149,23 @@ function Canvas() {
         if (selectedFig){
             let [canvasOffsetX, canvasOffsetY] = [canvasRef.current.getBoundingClientRect().x, canvasRef.current.getBoundingClientRect().y];
             let [newLeft, newTop] = [e.clientX-canvasOffsetX, e.clientY-canvasOffsetY];
-            let newObj = {display: "block", left: newLeft, top: newTop};
+            let newObj = {display: "block", left: newLeft, top: newTop, background: selectedFig.background, borderRadius: selectedFig.borderRadius};
             setDisplay(newObj);
         }
     };
 
     const fieldMouseUp = e => {
-        console.log('count');
         if (selectedFig) {
             if (!isCursorOverCanvas){
                 deleteSelectedFigure(canvasFigures, selectedFig, setCanvasFigures, setSelectedFig, setCurrentPos);
-                setDisplay({display: "none", left: 0, top: 0});
+                setDisplay({display: "none", left: 0, top: 0, borderRadius: 0, background: "blue"});
             }
         }
     };
 
     const fieldMouseMove = e => {
-        console.log(selectedFig, isCursorOverCanvas)
         if (selectedFig) {
             if (!isCursorOverCanvas){
-                console.log('ha')
                 let [canvasOffsetX, canvasOffsetY] = [canvasRef.current.getBoundingClientRect().x, canvasRef.current.getBoundingClientRect().y];
                 let [mouseX, mouseY] = [e.clientX, e.clientY];
                 let dx = mouseX - display.left;
@@ -184,8 +176,6 @@ function Canvas() {
             }
         }
     };
-
-
 
     return (
         <div
@@ -198,6 +188,7 @@ function Canvas() {
                 onKeyDown={onKeyPress}
                 tabIndex="0"
             >
+                <div className="headerText">Canvas</div>
                 <canvas
                     ref={canvasRef}
                     onDragOver={onDragOver}
