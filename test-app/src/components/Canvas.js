@@ -63,6 +63,7 @@ function Canvas() {
 
     // handle mouse-enter-canvas event
     const onMouseEnter = e => {
+        console.log('entered')
         setIsCursorOverCanvas(true);
         setDraggableFig({display: "none", left: 0, top: 0, borderRadius: 0, background: "blue"}); // draggable figure is not visible
     };
@@ -115,6 +116,7 @@ function Canvas() {
 
     // handle mouse-up-on-canvas event
     const onMouseUp = e => {
+
         setSelectedFig(null); // no figure is selected
         setCurrentPos(null);
 
@@ -152,7 +154,9 @@ function Canvas() {
 
     // handle delete on key press if cursor is within canvas
     const onKeyPress = e => {
-        if (selectedFig){
+        console.log('hmtree')
+        if (isCursorOverCanvas && selectedFig){
+            console.log('tut')
             if (e.keyCode === BACKSPACE || e.keyCode === DELETE){ /* if either backspace of delete is pressed */
                 /* delete selected figure */
                deleteSelectedFigure(canvasFigures, selectedFig, setCanvasFigures, setSelectedFig, setCurrentPos);
@@ -179,7 +183,7 @@ function Canvas() {
                 let [mouseX, mouseY] = [e.clientX, e.clientY];
                 let dx = mouseX - draggableFig.left;
                 let dy = mouseY - draggableFig.top;
-                let [newLeft, newTop] = [draggableFig.left+dx-canvasOffsetX, draggableFig.top+dy-canvasOffsetY];
+                let [newLeft, newTop] = [draggableFig.left+dx-canvasOffsetX-selectedFig.offsetX, draggableFig.top+dy-canvasOffsetY];
                 setDraggableFig({display: "block", left: newLeft, top: newTop, background: selectedFig.background, borderRadius: selectedFig.borderRadius});
             }
         }
@@ -190,14 +194,16 @@ function Canvas() {
             className="backgroundDiv"
             onMouseUp={fieldMouseUp}
             onMouseMove={fieldMouseMove}
+
         >
             <div
                 className="canvas"
-                onKeyDown={onKeyPress}
+                onKeyPress={onKeyPress}
                 tabIndex="0"
             >
                 <div className="headerText">Canvas</div>
                 <canvas
+
                     ref={canvasRef}
                     onDragOver={onDragOver}
                     onDrop = {onDrop}
@@ -217,7 +223,7 @@ function Canvas() {
                 </div>
                 <div style={{left: draggableFig.left, top: draggableFig.top, display: draggableFig.display,
                     background: draggableFig.background, borderRadius: draggableFig.borderRadius}}
-                     className="testDiv" > </div>
+                     className="draggableDiv" > </div>
 
             </div>
         </div>
