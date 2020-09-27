@@ -1,8 +1,8 @@
 import Figure from "./Figure";
 
 class Ellipse extends Figure {
-    constructor(id, background, borderRadius, x, y){
-        super(id, background, borderRadius, x, y);
+    constructor(id, background, borderRadius, x, y, offsetX, offsetY){
+        super(id, background, borderRadius, x, y, offsetX, offsetY);
         this.rx = 75;
         this.ry = 37.5;
     }

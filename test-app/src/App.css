@@ -61,8 +61,15 @@ canvas{
 
 .clearDiv {
   position: absolute;
-  left: 1000px;
+  left: 650px;
   display: inline-block;
+  width: 100px;
+  height: 50px;
+}
+
+button{
+  width: 100px;
+  height: 50px;
 }
 
 .testDiv {
