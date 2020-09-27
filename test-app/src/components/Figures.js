@@ -3,8 +3,8 @@ import '../App.css'
 
 function Figures() {
     let objFigures = [
-        {name: "rectangle", background: "blue", borderRadius: "0%"},
-        {name: "ellipse", background: "green", borderRadius: "50%"}
+        {name: "ellipse", background: "blue", borderRadius: "50%"},
+        {name: "rectangle", background: "green", borderRadius: "0%"}
     ];
 
     let figures = [];
@@ -19,12 +19,10 @@ function Figures() {
                     e.dataTransfer.setData("id", fig.name);
                     e.dataTransfer.setData("borderRadius", fig.borderRadius);
                     e.dataTransfer.setData("background", fig.background);
-                    e.dataTransfer.setData("offsetX", e.nativeEvent.offsetX.toString());
-                    e.dataTransfer.setData("offsetY", e.nativeEvent.offsetY.toString())
+                    e.dataTransfer.setData("offsetX", e.nativeEvent.offsetX.toString()); // offset to the figure left border
+                    e.dataTransfer.setData("offsetY", e.nativeEvent.offsetY.toString()) // offset to the figure top border
                 }}
             >  </div>)
-
-
     });
 
     return (

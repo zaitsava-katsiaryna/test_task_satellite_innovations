@@ -5,11 +5,12 @@ import Canvas from "./components/Canvas"
 
 function App () {
     return (
+
         <div className="container-drag">
           <Figures/>
           <Canvas/>
         </div>
-    );
+    )
 
 }
 

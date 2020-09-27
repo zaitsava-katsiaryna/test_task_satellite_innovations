@@ -6,9 +6,12 @@
 
 .container-drag {
   text-align: center;
+  background-color: red;
+  width: 100%;
 }
 
 .figures {
+  z-index: 10;
   position: absolute;
   width: 300px;
   height: 100vh;
@@ -19,6 +22,7 @@
 
 .canvas {
   position: absolute;
+  z-index: 10;
   width: 600px;
   height: 100vh;
   left: 300px;
@@ -43,4 +47,21 @@ canvas{
   position: absolute;
   left: 1000px;
   display: inline-block;
+}
+
+.testDiv {
+  position: absolute;
+  background-color: red;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 75px;
+}
+
+.backgroundDiv{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
