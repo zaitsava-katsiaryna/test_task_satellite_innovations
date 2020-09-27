@@ -63,7 +63,6 @@ function Canvas() {
 
     // handle mouse-enter-canvas event
     const onMouseEnter = e => {
-        console.log('entered')
         setIsCursorOverCanvas(true);
         setDraggableFig({display: "none", left: 0, top: 0, borderRadius: 0, background: "blue"}); // draggable figure is not visible
     };
@@ -103,7 +102,6 @@ function Canvas() {
 
     // handle mouse-down-on-canvas event
     const onMouseDown = e => {
-        e.preventDefault();
         let [canvasOffsetX, canvasOffsetY] = [canvasRef.current.getBoundingClientRect().x, canvasRef.current.getBoundingClientRect().y];
         let [mouseX, mouseY] = [e.clientX-canvasOffsetX, e.clientY-canvasOffsetY];
         for (let fig of canvasFigures) {
@@ -154,9 +152,8 @@ function Canvas() {
 
     // handle delete on key press if cursor is within canvas
     const onKeyPress = e => {
-        console.log('hmtree')
+        console.log('tut')
         if (isCursorOverCanvas && selectedFig){
-            console.log('tut')
             if (e.keyCode === BACKSPACE || e.keyCode === DELETE){ /* if either backspace of delete is pressed */
                 /* delete selected figure */
                deleteSelectedFigure(canvasFigures, selectedFig, setCanvasFigures, setSelectedFig, setCurrentPos);
@@ -177,6 +174,7 @@ function Canvas() {
 
     // handle mouse-move event outside the canvas
     const fieldMouseMove = e => {
+
         if (selectedFig) {
             if (!isCursorOverCanvas){
                 let [canvasOffsetX, canvasOffsetY] = [canvasRef.current.getBoundingClientRect().x, canvasRef.current.getBoundingClientRect().y];
@@ -190,43 +188,40 @@ function Canvas() {
     };
 
     return (
-        <div
-            className="backgroundDiv"
-            onMouseUp={fieldMouseUp}
-            onMouseMove={fieldMouseMove}
-
-        >
+      <div
+           className="backgroundDiv"
+          onMouseUp={fieldMouseUp}
+          onMouseMove={fieldMouseMove}
+       >
             <div
                 className="canvas"
-                onKeyPress={onKeyPress}
+                onKeyDown={onKeyPress}
                 tabIndex="0"
             >
                 <div className="headerText">Canvas</div>
                 <canvas
-
                     ref={canvasRef}
-                    onDragOver={onDragOver}
                     onDrop = {onDrop}
                     onMouseDown={(e, canvasRef) => onMouseDown(e, canvasRef)}
                     onMouseUp = {onMouseUp}
                     onMouseMove = {onMouseMove}
                     onMouseOut={onMouseOut}
                     onMouseEnter={onMouseEnter}
+                    onDragOver={onDragOver}
                     width={CANVAS_WIDTH}
                     height={CANVAS_HEIGHT}/>
                 <div className="clearDiv">
                     <button onClick={e => {
-                        // clear local storage
                         localStorage.clear();
                         setCanvasFigures([])
                     }}>Clear</button>
                 </div>
                 <div style={{left: draggableFig.left, top: draggableFig.top, display: draggableFig.display,
-                    background: draggableFig.background, borderRadius: draggableFig.borderRadius}}
-                     className="draggableDiv" > </div>
+                background: draggableFig.background, borderRadius: draggableFig.borderRadius}}
+                className="draggableDiv" > </div>
 
             </div>
-        </div>
+         </div>
 
     )
 }
