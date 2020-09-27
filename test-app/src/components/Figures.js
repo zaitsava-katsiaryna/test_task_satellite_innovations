@@ -14,7 +14,7 @@ function Figures() {
                 draggable
                 key={fig.name}
                 className="draggable"
-                style={{background: fig.background, borderRadius: fig.borderRadius, marginTop: "50px"}}
+                style={{background: fig.background, borderRadius: fig.borderRadius}}
                 onDragStart={e => {
                     e.dataTransfer.setData("id", fig.name);
                     e.dataTransfer.setData("borderRadius", fig.borderRadius);

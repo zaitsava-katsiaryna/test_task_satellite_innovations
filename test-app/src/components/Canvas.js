@@ -2,7 +2,6 @@ import React, {useRef, useEffect, useState} from "react";
 import '../App.css'
 import Ellipse from "./Ellipse"
 import Rectangle from "./Rectangle";
-import DraggableDiv from "./DraggableDiv";
 
 const DELETE = 46;
 const BACKSPACE = 8;
@@ -29,7 +28,7 @@ function parseData(str){
 }
 
 function deleteSelectedFigure(canvasFigures, selectedFig, setCanvasFigures, setSelectedFig, setCurrentPos){
-    console.log('deleting')
+    console.log('deleting');
     let updatedFigures = canvasFigures.filter(fig => {return fig !== selectedFig});
     setCanvasFigures(updatedFigures);
     setSelectedFig(null);
@@ -43,7 +42,7 @@ function Canvas() {
     const [selectedFig, setSelectedFig] = useState(null);
     const [currentPos, setCurrentPos] = useState(null);
     const [isCursorOverCanvas, setIsCursorOverCanvas] = useState(false);
-    const [display, setDisplay] = useState({display: "block", left: 0, right: 0, background: "green", borderRadius: "0px"});
+    const [display, setDisplay] = useState({display: "none", left: 0, right: 0, background: "green", borderRadius: "0px"});
 
     const onDragOver = e => {
         e.preventDefault();
@@ -142,6 +141,7 @@ function Canvas() {
 
     const onMouseEnter = e => {
         setIsCursorOverCanvas(true);
+        setDisplay({display: "none", left: 0, top: 0, borderRadius: 0, background: "blue"});
     };
 
     const onMouseOut = e => {
@@ -170,9 +170,8 @@ function Canvas() {
                 let [mouseX, mouseY] = [e.clientX, e.clientY];
                 let dx = mouseX - display.left;
                 let dy = mouseY - display.top;
-
                 let [newLeft, newTop] = [display.left+dx-canvasOffsetX, display.top+dy-canvasOffsetY];
-                setDisplay({display: "block", left: newLeft, top: newTop});
+                setDisplay({display: "block", left: newLeft, top: newTop, background: selectedFig.background, borderRadius: selectedFig.borderRadius});
             }
         }
     };
@@ -198,16 +197,17 @@ function Canvas() {
                     onMouseMove = {onMouseMove}
                     onMouseOut={onMouseOut}
                     onMouseEnter={onMouseEnter}
-                    width={600}
-                    height={600}/>
+                    width={CANVAS_WIDTH}
+                    height={CANVAS_HEIGHT}/>
                 <div className="clearDiv">
                     <button onClick={() => {
                         localStorage.clear();
                         setCanvasFigures([])
                     }}>Clear</button>
                 </div>
-                <DraggableDiv display={display.display} left={display.left} top={display.top}
-                              background={display.background} borderRadius={display.borderRadius}/>
+                <div style={{left: display.left, top: display.top, display: display.display,
+                    background: display.background, borderRadius: display.borderRadius}}
+                     className="testDiv" > </div>
 
             </div>
         </div>
